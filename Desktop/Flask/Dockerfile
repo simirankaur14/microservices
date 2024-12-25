@@ -1,11 +1,21 @@
-FROM python:3.9
+FROM python:3.10-alpine3.15
 
-WORKDIR /usr/src/app
+# Set working directory
+WORKDIR /app
 
-COPY requirements.txt ./
+# Copy and install dependencies
+COPY requirements.txt .
+RUN pip install -r requirements.txt
 
-RUN pip install --no-cache-dir -r requirements.txt
+# Copy application code
+COPY src src
 
-COPY . .
+# Expose application port
+EXPOSE 5000
 
-CMD [ "python", "./app.py" ]
+# Add health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=30s --retries=3 \
+  CMD curl --fail http://localhost:5000/health || exit 1
+
+# Entrypoint for the container
+ENTRYPOINT ["python", "./src/app.py"]
