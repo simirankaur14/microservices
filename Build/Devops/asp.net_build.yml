@@ -1,0 +1,39 @@
+# Starter pipeline
+
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- none
+
+pool: $(Agentpoolname)
+
+steps:
+- checkout: self
+
+- task: CmdLine@2
+  inputs:
+    script: |
+      echo Write your commands here
+      dir
+
+- task: NuGetCommand@2
+  inputs:
+    command: 'restore'
+    restoreSolution: './asp.net/shalini_test_proj.sln'
+    feedsToUse: 'select'
+
+
+- task: MSBuild@1
+  inputs:
+    solution: './asp.net/shalini_test_proj.sln'
+    msbuildArguments: '/p:OutDir=$(Build.ArtifactStagingDirectory)/new'
+    configuration: 'Release'
+    clean: true
+
+- task: PublishBuildArtifacts@1
+  inputs:
+    PathtoPublish: '$(Build.ArtifactStagingDirectory)/new'
+    ArtifactName: 'shalini'
+    publishLocation: 'Container'

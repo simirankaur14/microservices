@@ -1,0 +1,23 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v8.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v8.0": {
+      "shalini_test_proj/1.0.0": {
+        "runtime": {
+          "shalini_test_proj.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "shalini_test_proj/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}
