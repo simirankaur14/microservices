@@ -1,0 +1,44 @@
+trigger:
+  branches:
+    include:
+      - main
+
+pool: $(Agentpoolname)
+
+steps:
+- checkout: self
+  clean: true
+
+- task: CmdLine@2
+  inputs:
+    script: |
+      echo Running initial commands...
+      dir
+
+- task: TerraformTaskV4@4
+  inputs:
+    provider: 'aws'
+    command: 'init'
+    backendServiceAWS: 'AWS_Terraform'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform'
+    backendAWSBucketName: 'terraformbucketremotebackend'
+    backendAWSKey: 'Terraform_State_files/terraform.tfstate'
+    backendAWSRegion: 'us-east-1'
+
+- task: TerraformTaskV4@4
+  inputs:
+    provider: 'aws'
+    command: 'plan'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform'
+    environmentServiceNameAWS: 'AWS_Terraform'
+    commandOptions: '-lock=false -out=plan.out'
+
+- task: TerraformTaskV4@4
+  inputs:
+    provider: 'aws'
+    command: 'apply'
+    workingDirectory: '$(System.DefaultWorkingDirectory)/Terraform'
+    environmentServiceNameAWS: 'AWS_Terraform'
+    commandOptions: '-lock=false'
+    condition: succeeded()
+

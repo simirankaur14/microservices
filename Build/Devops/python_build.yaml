@@ -1,0 +1,36 @@
+# Starter pipeline
+
+# Start with a minimal pipeline that you can customize to build and deploy your code.
+# Add steps that build, run tests, deploy, and more:
+# https://aka.ms/yaml
+
+trigger:
+- none
+
+pool: $(Agentpoolname)
+
+steps:
+- checkout: self
+
+- task: CmdLine@2
+  inputs:
+    script: |
+      echo Write your commands here
+      dir
+
+# Step 2: Install dependencies
+- script: |
+    python -m pip install --upgrade pip
+    pip install -r ./Docker/Flask/requirements.txt
+  displayName: Install Dependencies
+
+# Step 4: Package Application (if applicable)
+- script: |
+    python ./Docker/Flask/setup.py sdist bdist_wheel
+  displayName: Build Project
+
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(System.DefaultWorkingDirectory)/dist'  
+    artifactName: 'python-build'                         
+    publishLocation: 'pipeline'      
