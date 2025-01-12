@@ -41,4 +41,3 @@ steps:
     environmentServiceNameAWS: 'AWS_Terraform'
     commandOptions: '-lock=false'
     condition: succeeded()
-

@@ -9,10 +9,10 @@ terraform {
 
 
 resource "aws_s3_bucket" "shalinianjali" {
-  bucket = "shalinianjali-bucket"
+  bucket = var.bucket_name
 
   tags = {
-    Name        = "My bucket"
+    Name        = var.bucket_name
     Environment = "Dev"
   }
 }
@@ -127,8 +127,36 @@ resource "aws_sqs_queue" "terraform_queue" {
   }
 }
 
+resource "aws_instance" "ec2_instances" {
+  for_each = toset(var.ec2_instance_name)
 
+  ami           =  "ami-05576a079321f21f8" # Replace with your desired AMI ID 
+  instance_type = "t2.micro"             # Update with your desired instance type
+  key_name      = "test"        # Replace with your key pair name
+  vpc_security_group_ids = [aws_security_group.ansible_master_sg.id]
 
+  tags = {
+    Name = each.key
+  }
+}
 
+resource "aws_security_group" "ansible_master_sg" {
+  name        = "ansible_master_sg"
+  description = "Security group for Ansible master"
+
+  ingress {
+    from_port   = 22
+    to_port     = 22
+    protocol    = "tcp"
+    cidr_blocks = ["0.0.0.0/0"] # Allows SSH access from anywhere (adjust for security)
+  }
+
+  egress {
+    from_port   = 0
+    to_port     = 0
+    protocol    = "-1"
+    cidr_blocks = ["0.0.0.0/0"] # Allow all outbound traffic
+  }
+}
 
 

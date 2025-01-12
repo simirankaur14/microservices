@@ -1,6 +1,5 @@
 variable "bucket_name" {
   type    = string
-  default = "shalinianjali-bucket"
 }
 
 variable "bucket_env" {
@@ -20,4 +19,9 @@ variable "sns_emailnotify" {
 
 variable "emailid" {
   type = string
+}
+
+variable "ec2_instance_name" {
+type = list(string)
+default = ["ansible_master" , "ansible_client_1" , "ansible_client_2"]
 }
