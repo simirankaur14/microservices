@@ -30,3 +30,7 @@ jobs:
           name: my-jar
           path: java/MyJavaApp/target/*.jar
 
+      - name: Load .env into GitHub ENV
+        run: |
+          grep -v '^#' .env | xargs -d '\n' -I {} echo {} >> $GITHUB_ENV
+
