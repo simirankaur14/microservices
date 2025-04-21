@@ -34,3 +34,6 @@ jobs:
         run: |
           grep -v '^#' .env | xargs -d '\n' -I {} echo {} >> $GITHUB_ENV
 
+      - name: Use it
+        run: echo "$DB_USER"
+
